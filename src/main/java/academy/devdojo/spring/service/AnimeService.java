@@ -1,6 +1,7 @@
 package academy.devdojo.spring.service;
 
 import academy.devdojo.spring.domain.Anime;
+import academy.devdojo.spring.mapper.AnimeMapper;
 import academy.devdojo.spring.repository.AnimeRepository;
 import academy.devdojo.spring.request.AnimePostRequestBody;
 import academy.devdojo.spring.request.AnimePutRequestBody;
@@ -28,7 +29,7 @@ public class AnimeService {
     }
 
     public Anime save(AnimePostRequestBody animePostRequestBody) {
-        return animeRepository.save(new Anime(animePostRequestBody.getName()));
+        return animeRepository.save(AnimeMapper.INSTANCE.toAnime(animePostRequestBody));
     }
 
     public void replace(long id, AnimePutRequestBody animePutRequestBody) {
@@ -38,9 +39,7 @@ public class AnimeService {
         if (!animeRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Anime not found");
         }
-        Anime replacer = Anime.builder().id(id).name(animePutRequestBody.getName()).build();
-        animeRepository.save(replacer);
-
+        animeRepository.save(AnimeMapper.INSTANCE.toAnime(animePutRequestBody));
     }
 
     public void delete(long id) {
