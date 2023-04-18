@@ -25,10 +25,14 @@ public class AnimeService {
     }
 
     public Anime findById(long id) {
-        return animeRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anime not found"));
+        return animeRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anime not found"));
     }
 
     public Anime save(AnimePostRequestBody animePostRequestBody) {
+        if (animeRepository.existsByName(AnimeMapper.INSTANCE.toAnime(animePostRequestBody).getName())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Anime already exists");
+        }
         return animeRepository.save(AnimeMapper.INSTANCE.toAnime(animePostRequestBody));
     }
 
