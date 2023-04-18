@@ -24,11 +24,7 @@ public class AnimeService {
     }
 
     public Anime findById(long id) {
-        return animes
-                .stream()
-                .filter(anime -> anime.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Anime not found"));
+        return animes.stream().filter(anime -> anime.getId().equals(id)).findFirst().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anime not found"));
     }
 
     public Anime save(Anime anime) {
@@ -37,18 +33,24 @@ public class AnimeService {
         return anime;
     }
 
-    public boolean delete(long id) {
+    public void replace(long id, Anime anime) {
 
-        Anime animeToRemove = animes
-                .stream()
-                .filter(anime -> anime.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Anime not found"));
+        if (id != anime.getId()) {
+            Anime animeInRequestedId = null;
+            try {
+                animeInRequestedId = findById(anime.getId());
+            } catch (Exception e) {
+                // i'm sorry mom
+            }
+            if(animeInRequestedId != null) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Anime id already in use!");
+            }
+        }
+        animes.remove(findById(id));
+        animes.add(anime);
+    }
 
-        log.info("anime to remove {}", animeToRemove);
-
-        animes.remove(animeToRemove);
-
-        return true;
+    public void delete(long id) {
+        animes.remove(findById(id));
     }
 }

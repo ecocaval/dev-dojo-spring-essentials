@@ -37,13 +37,15 @@ public class AnimeController {
         return new ResponseEntity<>(animeService.save(anime), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable long id) {
-        boolean animeWasDeleted = animeService.delete(id);
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> replace(@PathVariable long id, @RequestBody Anime anime) {
+        animeService.replace(id, anime);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
-        if (animeWasDeleted) {
-            return new ResponseEntity("anime deleted sucessfully", HttpStatus.OK);
-        }
-        return new ResponseEntity("anime was not found", HttpStatus.NOT_FOUND);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable long id) {
+        animeService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
