@@ -1,6 +1,8 @@
 package academy.devdojo.spring.controller;
 
 import academy.devdojo.spring.domain.Anime;
+import academy.devdojo.spring.request.AnimePostRequestBody;
+import academy.devdojo.spring.request.AnimePutRequestBody;
 import academy.devdojo.spring.service.AnimeService;
 import academy.devdojo.spring.util.DateUtil;
 import lombok.RequiredArgsConstructor;
@@ -33,13 +35,13 @@ public class AnimeController {
     }
 
     @PostMapping
-    public ResponseEntity<Anime> save(@RequestBody Anime anime) {
-        return new ResponseEntity<>(animeService.save(anime), HttpStatus.CREATED);
+    public ResponseEntity<Anime> save(@RequestBody AnimePostRequestBody animePostRequestBody) {
+        return new ResponseEntity<>(animeService.save(animePostRequestBody), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> replace(@PathVariable long id, @RequestBody Anime anime) {
-        animeService.replace(id, anime);
+    public ResponseEntity<Void> replace(@PathVariable long id, @RequestBody AnimePutRequestBody animePutRequestBody) {
+        animeService.replace(id, animePutRequestBody);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
