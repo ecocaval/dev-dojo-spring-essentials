@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Log4j2
@@ -20,7 +21,10 @@ public class AnimeService {
 
     private final AnimeRepository animeRepository;
 
-    public List<Anime> findAll() {
+    public List<Anime> findAll(String name) {
+        if(name != null) {
+            return animeRepository.findByName(name);
+        }
         return animeRepository.findAll();
     }
 

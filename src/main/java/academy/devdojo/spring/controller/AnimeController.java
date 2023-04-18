@@ -16,21 +16,19 @@ import java.util.List;
 @RestController
 @RequestMapping("anime")
 @Log4j2
-//@AllArgsConstructor
 @RequiredArgsConstructor
 public class AnimeController {
     private final DateUtil dateUtil;
     private final AnimeService animeService;
 
-    @GetMapping()
-    public ResponseEntity<List<Anime>> findAll() {
-        return ResponseEntity.ok(animeService.findAll());
+    @GetMapping
+    public ResponseEntity<List<Anime>> findAll(@RequestParam(name = "name", required = false) String name) {
+        return ResponseEntity.ok(animeService.findAll(name));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Anime> findById(@PathVariable long id) {
         Anime anime = animeService.findById(id);
-
         return ResponseEntity.ok(anime);
     }
 
